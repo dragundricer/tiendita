@@ -10,9 +10,11 @@ from django.shortcuts import get_object_or_404
 class CategoriaViews(ViewSet):
     def list(self, request, format=None):
         categoria = Categoria.objects.all()
+        data = UnidadMedidaSerializador(categoria, many=True).data
         if categoria:
             return Response({
-                'message':'Si hay'
+                'message':'ok',
+                'contendio':data
             })
         else:
             return Response({
@@ -53,8 +55,8 @@ class CategoriaViews(ViewSet):
             )
     
     def destroy(self,request,pk):
-        get_object_or_404(Productos,pk=pk)
-        Categoria.object.filter(prod_id=pk).delete()
+        get_object_or_404(Categoria,pk=pk)
+        Categoria.object.filter(cat_id=pk).delete()
         return Response({
             'message':'Ok',
             'contenido':'Producto eliminado con exito'
@@ -110,8 +112,8 @@ class ProductosViews(ViewSet):
             )
     
     def destroy(self,request,pk):
-        get_object_or_404(Productos,pk=pk)
-        Productos.object.filter(prod_id=pk).delete()
+        instancia = Productos.objects.get(prod_id=pk)
+        instancia.delete()
         return Response({
             'message':'Ok',
             'contenido':'Producto eliminado con exito'

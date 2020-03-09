@@ -38,8 +38,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'tiendita'
+    'tiendita',
+    'corsheaders'
 
+]
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3030"
+]
+
+
+
+CORS_ALLOW_METHODS=[
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'corsheaders.middleware.CorsMiddleware',  
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'ventas.urls'

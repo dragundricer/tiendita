@@ -1,20 +1,34 @@
-import React from 'react';
 
-const Productos = ({productos}) => {
-    console.log(productos);
-    
-    return (
-        <tr>
-            <td>{productos.prod_id}</td>
-            <td>{productos.prod_nom}</td>
-            <td>{productos.prod_cant}</td>
-            <td>{productos.prod_prec}</td>
-            <td>
-                <button className="btn btn-danger">Eliminar</button>
-                <button className="btn btn-warning">Modificar</button>
-            </td>
-        </tr>
-    );
+import React, { Component, Fragment } from 'react'
+import { ProductoServices } from '../services/ProductosService';
+import AdminCargando from './AdminCargando';
+import $ from 'jquery';
+import Modal from './Modal';
+
+ class Productos extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            productos: this.props.productos,
+            
+        }
+
+    }
+
+
+
+    render() {
+
+        return (
+            <Fragment>
+
+                
+                {/*  */}
+            </Fragment>
+
+        )
+    }
 }
+
 
 export default Productos;
