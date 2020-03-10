@@ -25,8 +25,7 @@ SECRET_KEY = '%r#wi^ejifo25zckmj#ejm5k!05-r$h+0ze3wobfn#+m%jz1#k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -39,32 +38,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'tiendita',
-    'corsheaders'
+    'corsheaders',
 
 ]
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3030"
-]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 
-CORS_ALLOW_METHODS=[
-    'GET',
-    'POST',
-    'PUT',
-    'DELETE'
-]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        'corsheaders.middleware.CorsMiddleware',  
-    'django.middleware.common.CommonMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'ventas.urls'

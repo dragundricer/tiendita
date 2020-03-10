@@ -4,7 +4,7 @@ import Header from './components/Header';
 import { ProductoServices } from './services/ProductosService'
 import Productos from './components/Productos';
 import Modal from './components/Modal';
-
+import { URL_BACK } from './enviroments/Enviroments';
 
 export default class App extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ export default class App extends Component {
       edit: false
     }
   }
+
   showModalEdit(data) {
     this.setState({
       prod_id: data.prod_id,
@@ -29,14 +30,28 @@ export default class App extends Component {
     })
     window.$("#exampleModal").modal("show");
   }
+  showModalInsert() {
+    this.setState({
+      edit: false
+    })
+    window.$("#exampleModal").modal("show");
+  }
 
-  traerAmbientes = () => {
+  traerProductos = () => {
     ProductoServices.getProductos().then(resultado => {
-      if (this.state.Productos.length === 0) {
+      console.log(resultado);
+      if (resultado.contenido){
         this.setState({
+          ...this.state.Productos,
           Productos: resultado.contenido
         })
+      }else{
+        this.setState({
+          Productos:[]
+        })
       }
+      // if (this.state.Productos.length === 0) {
+      // }
     })
   }
   nombre = (e) => {
@@ -44,18 +59,20 @@ export default class App extends Component {
       prod_nom: e.target.value
     })
   }
-  cantidad=(e)=>{
+  cantidad = (e) => {
     this.setState({
-      prod_cant:e.target.value
+      prod_cant: e.target.value
     })
   }
-  precio=(e)=>{
+  precio = (e) => {
     this.setState({
-      prod_prec:e.target.value
+      prod_prec: e.target.value
     })
   }
   componentDidMount() {
-    this.traerAmbientes()
+    console.log(this.state.Productos.length);
+
+    this.traerProductos()
   }
   tabla(data, indice) {
     return (
@@ -69,20 +86,44 @@ export default class App extends Component {
           {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onClick={() => this.showModalEdit(this.state.productos)}>Modificar</button> */}
 
           <button className="btn btn-dark" onClick={() => this.showModalEdit(data)} > update</button>
-          <button className="btn btn-warning" onClick={()=> this.eliminar(data.prod_id)}>Eliminar</button>
+          <button className="btn btn-warning" onClick={() => this.eliminar(data.prod_id)}>Eliminar</button>
         </td>
       </tr>
     )
   }
 
-  eliminar(id){
-    ProductoServices.eliminar(id).then(resultado => {
-      if (this.state.Productos.length === 0) {
-        this.setState({
-          Productos: resultado.contenido
-        })
-      }
+  eliminar(id) {
+
+    if (window.confirm("estas seguro de eliminar")) {
+      fetch(`${URL_BACK}/productos/${id}`, {
+        method: 'DELETE',
+        header: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(rpta=>{
+        return rpta.json()
+      }).then(mensaje=>{
+        this.traerProductos()
+        console.log(mensaje);
+        
+      })
+      // this.traerProductos()
+    }
+    // window.location.reload(true);
+  }
+  insertar() {
+    ProductoServices.insertar(this.state.prod_nom, this.state.prod_cant, this.state.prod_prec).then(resultado => {
+
     })
+    window.location.reload(true);
+  }
+  actua() {
+    ProductoServices.update(this.state.prod_id,this.state.prod_nom, this.state.prod_cant, this.state.prod_prec).then(resultado => {
+
+
+    })
+    window.location.reload(true);
   }
   render() {
     return (
@@ -100,9 +141,14 @@ export default class App extends Component {
           </thead>
           <tbody>
             {
-              this.state.Productos.map((producto, indice) => (
-                this.tabla(producto, indice)
-              ))
+              this.state.Productos.length==0
+                ?
+                null
+                :
+
+                this.state.Productos.map((producto, indice) => (
+                  this.tabla(producto, indice)
+                ))
 
               //   .map((productos, indice)=>{
               //   <Productos key={indice} productos={productos} />
@@ -110,6 +156,12 @@ export default class App extends Component {
             }
           </tbody>
         </table>
+        <div className="row">
+          <div className="col-md-10"></div>
+          <div className="col-md-2 ">
+            <button className="btn btn-outline-secondary estilos" onClick={() => this.showModalInsert()} type="button" >+</button>
+          </div>
+        </div>
         {/* <Modal show={this.state.isOpen}
           onClose={this.toggleModal}
           valor={this.state.valor}
@@ -138,12 +190,12 @@ export default class App extends Component {
                 </div>
                 <div className="form-group">
                   <label for="exampleInputEmail1">Precio:</label>
-                  <input type="number" className="form-control" value={this.state.prod_prec} onChange={this.precio}   min="0" />
+                  <input type="number" className="form-control" value={this.state.prod_prec} onChange={this.precio} min="0" />
                 </div>
 
                 <div className="form-group">
                   <label for="exampleInputEmail1">Cantidad:</label>
-                  <input type="number" className="form-control" value={this.state.prod_cant} onChange={this.cantidad}  max={this.state.prod_cant} min="1" />
+                  <input type="number" className="form-control" value={this.state.prod_cant} onChange={this.cantidad} max={this.state.prod_cant} min="1" />
                 </div>
 
               </div>
@@ -152,14 +204,15 @@ export default class App extends Component {
 
                 {
                   this.state.edit ?
-                    <button type="button" className="btn btn-primary" onClick={() => this.sendNetworkUpdate()}>Actualizar</button>
+                    <button type="button" className="btn btn-primary" onClick={() => this.actua()}>Actualizar</button>
                     :
-                    <button type="button" className="btn btn-primary" onClick={() => this.sendNetworkProduct()}>Guardar</button>
+                    <button type="button" className="btn btn-primary" onClick={() => this.insertar()}>Guardar</button>
                 }
               </div>
             </div>
           </div>
         </div>
+
       </div>
     )
   }
