@@ -20,7 +20,7 @@ export class ProductoServices {
 
     }
     static async insertar(nom,cant,pre) {
-        fetch(`${URL_BACK}/productos/`, {
+       await fetch(`${URL_BACK}/productos/`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -42,7 +42,9 @@ export class ProductoServices {
         })
     }
     static async update(id,nom,cant,pre) {
-        fetch(`${URL_BACK}/productos/${id}/`, {
+
+        
+        await fetch(`${URL_BACK}/productos/${id}/`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

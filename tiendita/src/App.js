@@ -32,8 +32,13 @@ export default class App extends Component {
   }
   showModalInsert() {
     this.setState({
+      prod_id:"",
+      prod_nom:"",
+      prod_cant:"",
+      prod_prec:"",
       edit: false
     })
+  
     window.$("#exampleModal").modal("show");
   }
 
@@ -113,17 +118,24 @@ export default class App extends Component {
     // window.location.reload(true);
   }
   insertar() {
+    this.setState({
+      prod_id:"",
+      prod_nom:"",
+      prod_cant:"",
+      prod_prec:""
+    })
     ProductoServices.insertar(this.state.prod_nom, this.state.prod_cant, this.state.prod_prec).then(resultado => {
 
+      this.traerProductos()
+      
     })
-    window.location.reload(true);
+    window.$("#exampleModal").modal("toggle");
   }
   actua() {
     ProductoServices.update(this.state.prod_id,this.state.prod_nom, this.state.prod_cant, this.state.prod_prec).then(resultado => {
-
+      this.traerProductos()
 
     })
-    window.location.reload(true);
   }
   render() {
     return (
